@@ -18,18 +18,17 @@ function CsvReader() {
   }
 
   function handleOnFileLoad(data) {
-    const result = []
-    const colunasCSV = data[0].data
-    const linhasCSV = data.slice(1)
+    const [colunasCSV, ...linhasCSV] = data
 
     //Listar as colunasCSV
-    const colunas = colunasCSV.map(coluna => ({
+    const colunas = colunasCSV.data.map(coluna => ({
       title: `${coluna}`,
       field: `${coluna.toLowerCase()}`,
     }))
 
     setListaColunasCSV(colunas)
 
+    const dadosParaTabela = []
     for (let i = 0; i < linhasCSV.length; i++) {
       let obj = {}
       let currentline = linhasCSV[i]
@@ -38,10 +37,10 @@ function CsvReader() {
         obj[colunas[j]['field']] = currentline.data[j]
       }
 
-      result.push(obj)
+      dadosParaTabela.push(obj)
     }
 
-    setDadosTabela(result)
+    setDadosTabela(dadosParaTabela)
   }
 
   function handleOnError(err, file, inputElem, reason) {
@@ -100,8 +99,8 @@ function CsvReader() {
       </CSVReader>
       <Table
         title='CSV IMPORTADO'
-        teste={listaColunasCSV}
-        teste2={dadosTabela}
+        objColunas={listaColunasCSV}
+        objLinhas={dadosTabela}
       ></Table>
     </>
   )
