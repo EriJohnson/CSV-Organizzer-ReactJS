@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { CSVReader } from 'react-papaparse'
 
-import Table from '../Table'
+import { DadosTabelaContext } from '../../DadosTabelaContext'
+
 import ContainedButtons from '../Button'
 
 const buttonRef = React.createRef()
 
 function CsvReader() {
-  const [listaColunasCSV, setListaColunasCSV] = useState([])
-  const [dadosTabela, setDadosTabela] = useState([])
+  const { setColunasTabela } = useContext(DadosTabelaContext)
+  const { setLinhasTabela } = useContext(DadosTabelaContext)
 
   function handleOpenDialog(e) {
     // Note that the ref is set async, so it might be null at some point
@@ -26,7 +27,7 @@ function CsvReader() {
       field: `${coluna.toLowerCase()}`,
     }))
 
-    setListaColunasCSV(colunas)
+    setColunasTabela(colunas)
 
     const dadosParaTabela = []
     for (let i = 0; i < linhasCSV.length; i++) {
@@ -40,7 +41,7 @@ function CsvReader() {
       dadosParaTabela.push(obj)
     }
 
-    setDadosTabela(dadosParaTabela)
+    setLinhasTabela(dadosParaTabela)
   }
 
   function handleOnError(err, file, inputElem, reason) {
@@ -59,49 +60,47 @@ function CsvReader() {
       buttonRef.current.removeFile(e)
     }
 
-    setListaColunasCSV([])
-    setDadosTabela([])
+    setColunasTabela()
+    setLinhasTabela([])
   }
 
   return (
     <>
-      <CSVReader
-        ref={buttonRef}
-        onFileLoad={handleOnFileLoad}
-        onError={handleOnError}
-        noClick
-        noDrag
-        onRemoveFile={handleOnRemoveFile}
-      >
-        {({ file }) => (
-          <aside
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginBottom: 10,
-              alignItems: 'center',
-            }}
-          >
-            <ContainedButtons
-              handleClick={handleOpenDialog}
-              title='Escolher um arquivo CSV'
-              variant='contained'
-              icon='send'
-            />
-            <ContainedButtons
-              handleClick={handleRemoveFile}
-              title='remover'
-              variant='outlined'
-              icon='delete'
-            />
-          </aside>
-        )}
-      </CSVReader>
-      <Table
-        title='CSV IMPORTADO'
-        objColunas={listaColunasCSV}
-        objLinhas={dadosTabela}
-      ></Table>
+      <h1>CSV Organizzer</h1>
+      <div className='container'>
+        <CSVReader
+          ref={buttonRef}
+          onFileLoad={handleOnFileLoad}
+          onError={handleOnError}
+          noClick
+          noDrag
+          onRemoveFile={handleOnRemoveFile}
+        >
+          {({ file }) => (
+            <aside
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginBottom: 10,
+                alignItems: 'center',
+              }}
+            >
+              <ContainedButtons
+                handleClick={handleOpenDialog}
+                title='Escolher um arquivo CSV'
+                variant='contained'
+                icon='send'
+              />
+              <ContainedButtons
+                handleClick={handleRemoveFile}
+                title='remover'
+                variant='outlined'
+                icon='delete'
+              />
+            </aside>
+          )}
+        </CSVReader>
+      </div>
     </>
   )
 }

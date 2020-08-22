@@ -1,15 +1,17 @@
 import React from 'react'
+import { DadosTabelaProvider } from './DadosTabelaContext'
+
 import CsvReader from './components/CsvReader'
+import Table from './components/Table'
 
 import './assets/styles/global.css'
 
 function App() {
   return (
-    <>
-      <h1>CSV Organizzer</h1>
+    <DadosTabelaProvider>
       <CsvReader />
-      {/* <Table /> */}
-    </>
+      <Table />
+    </DadosTabelaProvider>
   )
 }
 
