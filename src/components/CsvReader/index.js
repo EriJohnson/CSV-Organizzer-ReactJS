@@ -8,6 +8,7 @@ import ContainedButtons from '../Button'
 const buttonRef = React.createRef()
 
 function CsvReader() {
+  const { setTituloTabela } = useContext(DadosTabelaContext)
   const { setColunasTabela } = useContext(DadosTabelaContext)
   const { setLinhasTabela } = useContext(DadosTabelaContext)
 
@@ -18,8 +19,9 @@ function CsvReader() {
     }
   }
 
-  function handleOnFileLoad(data) {
+  function handleOnFileLoad(data, file) {
     const [colunasCSV, ...linhasCSV] = data
+    setTituloTabela(file.name)
 
     //Listar as colunasCSV
     const colunas = colunasCSV.data.map(coluna => ({
